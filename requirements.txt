@@ -7,7 +7,7 @@ streamlit>=1.28.0
 pandas>=2.0.0
 plotly>=5.15.0
 requests>=2.31.0
-chromadb==0.3.29
+chromadb
 supabase>=2.0.0
 python-json-logger>=2.0.0
 tiktoken>=0.5.2

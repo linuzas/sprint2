@@ -1,7 +1,3 @@
-import sys
-import pysqlite3
-sys.modules['sqlite3'] = pysqlite3
-
 import streamlit as st
 import os
 from pathlib import Path

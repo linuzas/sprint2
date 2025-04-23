@@ -1,6 +1,7 @@
 # utils/tools_v2.py
 import requests
 import os
+import streamlit as st
 from datetime import datetime, timedelta
 from newsapi import NewsApiClient
 import numpy as np
@@ -8,7 +9,7 @@ import pandas as pd
 import json
 
 
-newsapi_key = os.getenv("newsapi_key")
+newsapi_key = st.secrets["newsapi_key"]
 
 def get_crypto_news_newsapi(query: str) -> str:
     """

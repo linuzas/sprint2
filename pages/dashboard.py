@@ -40,7 +40,7 @@ with st.sidebar:
 # --- Init Vector Store ---
 db = Chroma(
     persist_directory="knowledge_base/embeddings",
-    embedding_function=OpenAIEmbeddings()
+    embedding_function=OpenAIEmbeddings(openai_api_key=st.secrets["OPENAI_API_KEY"])
 )
 
 # --- Helper Functions ---

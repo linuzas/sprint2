@@ -7,6 +7,7 @@ from operator import itemgetter
 from typing import List, Tuple, Dict, Any
 import os
 import heapq
+import streamlit as st
 from collections import defaultdict
 
 # Modify this path to point to your Chroma DB
@@ -16,7 +17,7 @@ def get_retriever(top_k=3):
     """Creates a retriever function that uses Chroma DB"""
     try:
         # Connect to existing Chroma DB
-        embeddings = OpenAIEmbeddings()
+        embeddings = OpenAIEmbeddings(openai_api_key=st.secrets["OPENAI_API_KEY"])
         db = Chroma(persist_directory=CHROMA_DB_PATH, embedding_function=embeddings)
         
         # Create a retriever

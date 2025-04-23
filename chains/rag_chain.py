@@ -2,11 +2,12 @@
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
+import streamlit as st
 
 def process_rag_query(query, docs, router=None):
     """Process a query using RAG with retrieved documents"""
     # Initialize components
-    llm = ChatOpenAI(temperature=0.2)
+    llm = ChatOpenAI(temperature=0.2, openai_api_key=st.secrets["OPENAI_API_KEY"])
     output_parser = StrOutputParser()
     
     # Store the retrieved docs in the router for source attribution

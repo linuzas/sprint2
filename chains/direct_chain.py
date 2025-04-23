@@ -2,13 +2,14 @@
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
+import streamlit as st
 
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage, AIMessage, SystemMessage
 
 def process_direct_query(messages: list[dict]):
     """Process a chat with full memory using message roles"""
-    llm = ChatOpenAI(temperature=0.2)
+    llm = ChatOpenAI(temperature=0.2, openai_api_key=st.secrets["OPENAI_API_KEY"])
 
     # System message defines assistant behavior
     chat = [

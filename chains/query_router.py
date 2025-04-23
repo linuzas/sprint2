@@ -11,13 +11,14 @@ from langchain_core.messages import HumanMessage
 import json
 import os
 import re
+import streamlit as st
 from urllib.parse import urlparse
 
 class QueryRouter:
     def __init__(self):
-        self.llm = ChatOpenAI(temperature=0)
+        self.llm = ChatOpenAI(temperature=0, openai_api_key=st.secrets["OPENAI_API_KEY"])
         self.output_parser = StrOutputParser()
-        self.function_llm = ChatOpenAI(temperature=0, model="gpt-4")
+        self.function_llm = ChatOpenAI(temperature=0, model="gpt-4", openai_api_key=st.secrets["OPENAI_API_KEY"])
         self.last_retrieved_docs = []  # To store the last retrieved documents
         
     def route_query(self, query):

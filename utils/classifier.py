@@ -2,6 +2,7 @@
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+import streamlit as st
 
 def classify_query(query_text):
     """
@@ -11,7 +12,7 @@ def classify_query(query_text):
     - direct: Can be answered directly or is off-topic
     """
 
-    llm = ChatOpenAI(temperature=0)
+    llm = ChatOpenAI(temperature=0, openai_api_key=st.secrets["OPENAI_API_KEY"])
 
     # Early validation
     if not query_text.strip():

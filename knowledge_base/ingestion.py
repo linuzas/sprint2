@@ -2,9 +2,9 @@ import os
 import json
 import tiktoken
 import bs4
+import streamlit as st
 from pathlib import Path
 from typing import Optional, List
-from dotenv import load_dotenv
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import (
@@ -15,7 +15,6 @@ from langchain_chroma import Chroma
 from langchain.schema import Document
 
 # === Config ===
-load_dotenv()
 RAW_DOCS_DIR = "knowledge_base/raw_docs"
 VECTOR_DB_DIR = "knowledge_base/embeddings"
 INGESTED_LOG = "knowledge_base/ingested_sources.json"
@@ -142,7 +141,7 @@ def ingest_all(local: bool = True, url: Optional[str] = None) -> bool:
         print("✅ No new documents to add. All sources already ingested.")
         return True
 
-    embeddings = OpenAIEmbeddings()
+    embeddings = OpenAIEmbeddings(openai_api_key=st.secrets["OPENAI_API_KEY"])
     db = Chroma(
         persist_directory=VECTOR_DB_DIR,
         embedding_function=embeddings

@@ -1,5 +1,8 @@
 # Crypto Assistant 🤖
 
+🚨 **Note:** Attempted to deploy a public demo on Streamlit Cloud, but encountered technical limitations (incompatible SQLite version for ChromaDB).  
+➡️ Will demonstrate the full functionality live instead.
+
 A sophisticated cryptocurrency trading assistant that combines a comprehensive knowledge base with real-time market data and analysis capabilities.
 
 ## 🌟 Features

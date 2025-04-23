@@ -90,88 +90,24 @@ def show_sidebar():
 """)
 
 # --- Main Chat + History UI ---
+
 def render_chat_interface(user_id, router):
-    # Add custom CSS for layout
-    st.markdown("""
-        <style>
-        /* Main container styles */
-        .main > div {
-            padding-bottom: 70px;  /* Space for input */
-        }
-
-        /* Chat message container */
-        .stChatMessageContent {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* Custom chat container */
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh - 100px);
-            padding-bottom: 80px;
-            box-sizing: border-box;
-        }
-
-        .chat-messages {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-
-        /* Chat input styling */
-        .stChatInput {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            padding: 20px 60px;
-            z-index: 1000;
-            border-top: 1px solid #ddd;
-            margin: 0;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        @media (max-width: 768px) {
-            .stChatInput {
-                padding: 10px 20px;
-            }
-        }
-
-        /* Adjust columns for better responsiveness */
-        [data-testid="column"] {
-            padding: 0 !important;
-        }
-
-        /* Make sure history column doesn't get too narrow */
-        [data-testid="column"]:last-child {
-            min-width: 250px;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
     chat_col, history_col = st.columns([3, 1])
 
     with chat_col:
-        show_title_and_description()
-
-        # Create chat container
-        st.markdown('<div class="chat-container"><div class="chat-messages">', unsafe_allow_html=True)
-
-        # Display messages
+        # Simple title and description
+        st.title("Crypto Advisor")
+        st.write("Ask questions about crypto concepts, trading strategies, news, or current prices.")
+        
+        # Display messages using Streamlit's native chat components
         for message in st.session_state.messages:
             if message["role"] != "system":
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
 
-        st.markdown('</div></div>', unsafe_allow_html=True)
-
-        # Chat input
+        # Simple chat input with default Streamlit styling
         if prompt := st.chat_input("Type a crypto question or analysis request...", key="chat_input"):
+            # Rate limiting logic
             now = time.time()
             if "last_requests" not in st.session_state:
                 st.session_state.last_requests = []
@@ -183,31 +119,31 @@ def render_chat_interface(user_id, router):
 
             st.session_state.last_requests.append(now)
 
+            # Add user message
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"):
                 st.markdown(prompt)
 
+            # Generate response
             last_messages = st.session_state.messages[-10:]
             with st.chat_message("assistant"):
                 placeholder = st.empty()
-                with st.spinner("Thinking..."):
+                with st.spinner("Analyzing..."):
                     response = router.route_query(last_messages)
-                    chunk_size = max(1, len(response) // 40)
-                    for i in range(0, len(response), chunk_size):
-                        placeholder.markdown(response[:i + chunk_size])
-                        time.sleep(0.01 + random.random() * 0.02)
+                    placeholder.markdown(response)
 
+            # Save message history
             st.session_state.messages.append({"role": "assistant", "content": response})
             update_chat_messages(st.session_state["conversation_id"], st.session_state["messages"])
             st.rerun()
 
-    # --- Chat History ---
+    # --- Chat History Column ---
     with history_col:
         st.subheader("💾 Export Chat")
         col_export_pdf, col_export_txt = st.columns(2)
 
         with col_export_pdf:
-            if st.button("📄 Export as PDF"):
+            if st.button("PDF"):
                 try:
                     pdf_bytes = generate_pdf(st.session_state["messages"])
                     st.download_button(
@@ -220,7 +156,7 @@ def render_chat_interface(user_id, router):
                     st.error(f"Export failed: {e}")
 
         with col_export_txt:
-            if st.button("📜 Export as TXT"):
+            if st.button("TXT"):
                 try:
                     txt = generate_txt(st.session_state["messages"])
                     st.download_button(

@@ -75,7 +75,7 @@ class StructuredLogger:
             "timestamp": datetime.now().isoformat(),
             **(extra or {})
         }
-        return json.dumps(log_data, ensure_ascii=False)
+        return json.dumps(log_data, ensure_ascii=False, default=str)
     
     def info(self, message: str, extra: Optional[Dict[str, Any]] = None) -> None:
         """Log an info message."""

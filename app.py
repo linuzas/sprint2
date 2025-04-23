@@ -13,6 +13,9 @@ from database.supabase_helpers import (
 )
 from frontend.streamlit_ui import show_sidebar, render_chat_interface
 from utils.logger import logger
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 # Constants
 PAGE_TITLE = "Crypto Advisor"

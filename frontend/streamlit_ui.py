@@ -91,45 +91,87 @@ def show_sidebar():
 
 # --- Main Chat + History UI ---
 def render_chat_interface(user_id, router):
+    # Add custom CSS for layout
+    st.markdown("""
+        <style>
+        /* Main container styles */
+        .main > div {
+            padding-bottom: 70px;  /* Space for input */
+        }
+
+        /* Chat message container */
+        .stChatMessageContent {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Custom chat container */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 100px);
+            padding-bottom: 80px;
+            box-sizing: border-box;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Chat input styling */
+        .stChatInput {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px 60px;
+            z-index: 1000;
+            border-top: 1px solid #ddd;
+            margin: 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .stChatInput {
+                padding: 10px 20px;
+            }
+        }
+
+        /* Adjust columns for better responsiveness */
+        [data-testid="column"] {
+            padding: 0 !important;
+        }
+
+        /* Make sure history column doesn't get too narrow */
+        [data-testid="column"]:last-child {
+            min-width: 250px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
     chat_col, history_col = st.columns([3, 1])
 
     with chat_col:
         show_title_and_description()
 
-        # --- Scrollable chat container ---
-        st.markdown("""
-            <style>
-            .chat-scroll-container {
-                max-height: 70vh;
-                overflow-y: auto;
-                padding-right: 1rem;
-                margin-bottom: 2rem;
-                border-radius: 0.5rem;
-            }
+        # Create chat container
+        st.markdown('<div class="chat-container"><div class="chat-messages">', unsafe_allow_html=True)
 
-            div[data-testid="stChatInput"] {
-                position: fixed;
-                bottom: 1.5rem;
-                left: 20%;
-                width: 60% !important;
-                z-index: 9999;
-                border-radius: 10px;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            }
-            </style>
-            <div class="chat-scroll-container">
-        """, unsafe_allow_html=True)
-
+        # Display messages
         for message in st.session_state.messages:
             if message["role"] != "system":
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
 
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown('</div></div>', unsafe_allow_html=True)
 
-        # --- Chat Input ---
-        if prompt := st.chat_input("Type a crypto question or analysis request..."):
-
+        # Chat input
+        if prompt := st.chat_input("Type a crypto question or analysis request...", key="chat_input"):
             now = time.time()
             if "last_requests" not in st.session_state:
                 st.session_state.last_requests = []
